@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SobaiShikhi · সবাইশিখি — Learning Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    @media (max-width: 1080px) {
+      .course-grid { grid-template-columns: 1fr 1fr !important; }
+      .cat-grid { grid-template-columns: 1fr 1fr !important; }
+      .rcat-grid { grid-template-columns: repeat(4,1fr) !important; }
+      #repair-cta-row, #seller-types, #guide-meta, #contrib-stats { grid-template-columns: 1fr 1fr !important; }
+      .detail-grid { grid-template-columns: 1fr !important; }
+      .dash-grid { grid-template-columns: 1fr !important; }
+      .buy-col { margin-top: 24px !important; }
+      .teach-band { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 940px) {
+      .nav-cats, .nav-teach, .nav-login { display: none !important; }
+      #hero { grid-template-columns: 1fr !important; }
+      .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+      .browse-grid { grid-template-columns: 1fr !important; }
+      .browse-side { display: none !important; }
+      .profile-head { flex-direction: column !important; align-items: flex-start !important; }
+    }
+    @media (max-width: 680px) {
+      .course-grid, .cat-grid { grid-template-columns: 1fr !important; }
+      .rcat-grid { grid-template-columns: repeat(2,1fr) !important; }
+      #repair-cta-row, #seller-types, #guide-meta, #contrib-stats { grid-template-columns: 1fr !important; }
+      .wrap { padding-left: 18px !important; padding-right: 18px !important; }
+      .course-prog { grid-template-columns: 1fr !important; }
+      .nav-search { display: none !important; }
+      .step-img { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="data.js"></script>
+  <script src="repairdata.js"></script>
+  <script type="text/babel" src="components.jsx"></script>
+  <script type="text/babel" src="site.jsx"></script>
+  <script type="text/babel" src="browse.jsx"></script>
+  <script type="text/babel" src="coursedetail.jsx"></script>
+  <script type="text/babel" src="profile.jsx"></script>
+  <script type="text/babel" src="repair.jsx"></script>
+  <script type="text/babel" src="forum.jsx"></script>
+  <script type="text/babel" src="market.jsx"></script>
+  <script type="text/babel" src="experts.jsx"></script>
+  <script type="text/babel" src="blog.jsx"></script>
+  <script type="text/babel" src="ai.jsx"></script>
+  <script type="text/babel" src="panels.jsx"></script>
+  <script type="text/babel" src="learner.jsx"></script>
+  <script type="text/babel" src="instructor.jsx"></script>
+  <script type="text/babel" src="admin.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="app.jsx"></script>
+</body>
+</html>

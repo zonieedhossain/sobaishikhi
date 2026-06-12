@@ -1,0 +1,171 @@
+/* ============================================================
+   SobaiShikhi (সবাইশিখি) — Bangla Learning Marketplace
+   Friendly, trustworthy, vibrant. Emerald brand + coral CTA.
+   ============================================================ */
+
+:root {
+  --brand: oklch(0.55 0.105 168);
+  --brand-d: oklch(0.45 0.10 168);
+  --brand-soft: oklch(0.95 0.04 168);
+
+  --accent: oklch(0.66 0.17 38);          /* coral — primary CTA */
+  --accent-d: oklch(0.52 0.15 38);
+  --accent-soft: oklch(0.95 0.045 45);
+
+  --paper: oklch(0.985 0.005 95);
+  --paper-2: oklch(0.96 0.008 95);
+  --card: oklch(1 0 0);
+  --ink: oklch(0.24 0.014 260);
+  --ink-2: oklch(0.44 0.012 260);
+  --ink-3: oklch(0.60 0.010 260);
+  --line: oklch(0.90 0.008 260);
+  --line-2: oklch(0.94 0.006 260);
+  --ink-inv: oklch(0.98 0.005 95);
+
+  --ok: oklch(0.60 0.13 160);
+  --warn: oklch(0.72 0.15 70);
+  --danger: oklch(0.58 0.18 25);
+  --info: oklch(0.60 0.12 250);
+  --gold: oklch(0.78 0.13 80);
+
+  --font-display: "Hind Siliguri", system-ui, sans-serif;
+  --font-body: "Hind Siliguri", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --r-sm: 7px;
+  --r: 11px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+
+  --shadow-sm: 0 1px 2px oklch(0.2 0.02 260 / 0.06), 0 1px 3px oklch(0.2 0.02 260 / 0.05);
+  --shadow: 0 4px 16px oklch(0.2 0.02 260 / 0.08), 0 1px 3px oklch(0.2 0.02 260 / 0.06);
+  --shadow-lg: 0 20px 56px oklch(0.2 0.02 260 / 0.16), 0 4px 12px oklch(0.2 0.02 260 / 0.07);
+
+  --maxw: 1240px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+#root { min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+img { display: block; max-width: 100%; }
+::selection { background: var(--accent); color: #fff; }
+
+/* typography */
+.bn { font-family: var(--font-display); }
+.mono { font-family: var(--font-mono); }
+.kicker {
+  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.display { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; line-height: 1.08; }
+h1,h2,h3,h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em; margin: 0; line-height: 1.1; }
+
+/* layout */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+.row { display: flex; }
+.col { display: flex; flex-direction: column; }
+.spread { display: flex; align-items: center; justify-content: space-between; }
+.center { display: flex; align-items: center; justify-content: center; }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 9px; justify-content: center;
+  font-family: var(--font-display); font-weight: 600; font-size: 15px;
+  padding: 11px 20px; border-radius: 10px; border: 1.5px solid transparent;
+  transition: transform .12s ease, background .15s ease, box-shadow .15s ease, color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.btn:active { transform: translateY(1px); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { background: var(--accent-d); box-shadow: 0 8px 22px oklch(0.66 0.17 38 / 0.32); }
+.btn-brand { background: var(--brand); color: #fff; }
+.btn-brand:hover { background: var(--brand-d); }
+.btn-dark { background: var(--ink); color: var(--ink-inv); }
+.btn-dark:hover { background: oklch(0.32 0.014 260); }
+.btn-ghost { background: var(--card); border-color: var(--line); color: var(--ink); }
+.btn-ghost:hover { background: var(--paper-2); border-color: var(--ink-3); }
+.btn-soft { background: var(--brand-soft); color: var(--brand-d); }
+.btn-soft:hover { background: oklch(0.92 0.05 168); }
+.btn-sm { padding: 8px 14px; font-size: 13.5px; border-radius: 9px; }
+.btn-lg { padding: 14px 26px; font-size: 16.5px; border-radius: 12px; }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+
+/* chips / badges */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.02em;
+  padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink-2);
+}
+.chip.solid { background: var(--ink); color: var(--ink-inv); border-color: var(--ink); }
+.chip.brand { background: var(--brand-soft); color: var(--brand-d); border-color: transparent; }
+.chip.accent { background: var(--accent-soft); color: var(--accent-d); border-color: transparent; }
+
+.badge {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.02em;
+  padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+}
+.badge.green { background: oklch(0.60 0.13 160 / 0.14); color: oklch(0.40 0.13 160); }
+.badge.amber { background: oklch(0.72 0.15 70 / 0.18); color: oklch(0.46 0.13 60); }
+.badge.red { background: oklch(0.58 0.18 25 / 0.13); color: oklch(0.48 0.18 25); }
+.badge.blue { background: oklch(0.60 0.12 250 / 0.13); color: oklch(0.44 0.12 250); }
+.badge.violet { background: oklch(0.55 0.16 300 / 0.13); color: oklch(0.45 0.16 300); }
+.badge.gray { background: var(--paper-2); color: var(--ink-2); }
+.badge.gold { background: oklch(0.78 0.13 80 / 0.20); color: oklch(0.50 0.10 75); }
+
+/* cards */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); }
+
+/* image placeholder slot */
+.slot {
+  position: relative; overflow: hidden; background-color: var(--paper-2);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 11px, oklch(0.88 0.01 260 / 0.6) 11px 12px);
+  display: flex; align-items: flex-end;
+}
+.slot .slot-tag {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em;
+  color: var(--ink-3); background: var(--card); border: 1px solid var(--line);
+  border-radius: 5px; padding: 3px 7px; margin: 10px;
+}
+.slot.dark {
+  background-color: oklch(0.30 0.03 260);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 11px, oklch(0.42 0.03 260 / 0.6) 11px 12px);
+}
+.slot.dark .slot-tag { background: oklch(0.34 0.03 260); color: oklch(0.78 0.01 260); border-color: oklch(0.44 0.03 260); }
+.slot.brand {
+  background-color: var(--brand-soft);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 11px, oklch(0.86 0.05 168 / 0.7) 11px 12px);
+}
+
+.hairline { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+/* forms */
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
+.input, .select, .textarea {
+  font-family: var(--font-body); font-size: 15px; color: var(--ink);
+  background: var(--card); border: 1.5px solid var(--line); border-radius: var(--r);
+  padding: 12px 14px; width: 100%; transition: border-color .15s, box-shadow .15s;
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none; border-color: var(--brand);
+  box-shadow: 0 0 0 4px oklch(0.55 0.105 168 / 0.14);
+}
+.textarea { resize: vertical; min-height: 96px; }
+
+/* scrollbar */
+.scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; border: 3px solid var(--paper); }
+
+.tnum { font-variant-numeric: tabular-nums; }
+.fade-up { }  /* offscreen iframes pause animations at frame 0; keep content visible */
+.star { color: var(--gold); }
