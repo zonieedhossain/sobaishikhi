@@ -734,7 +734,7 @@ function AdmOrders() {
 
 /* ---- PLATFORM SETTINGS (admin controls everything) ---- */
 function AdmSettings({ showToast }) {
-  const [com, setCom] = React.useState({ "Course sales": 20, "Store (tools & parts)": 10, "Expert consultations": 15, "Home services": 12 });
+  const [com, setCom] = React.useState({ "Course — self-produced": 20, "Course — we produce": 55, "Store (tools & parts)": 10, "Expert consultations": 15, "Home services": 12 });
   const [feats, setFeats] = React.useState({ "Courses marketplace": true, "Repair Hub": true, "Tools & Parts Store": true, "Expert Consultations": true, "Home Services": true, "Blog & Vlogs": true, "Community Forum": true, "AI Assistant": true });
   const [pay, setPay] = React.useState({ bKash: true, Nagad: true, Rocket: false, Card: true });
   const [banner, setBanner] = React.useState({ on: true, pct: 60, text: "নতুন শিক্ষার্থীদের জন্য সব কোর্সে বিশাল ছাড় — সীমিত সময়ের অফার চলছে" });
@@ -760,6 +760,9 @@ function AdmSettings({ showToast }) {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="bn" style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--line-2)", lineHeight: 1.5 }}>
+            <Icon name="money" size={13} style={{ verticalAlign: "-2px", color: "var(--accent-d)" }} /> <strong>Idea buy-out</strong> — এককালীন পেমেন্ট, কোনো কমিশন নয়; প্রতিটি চুক্তি অ্যাডমিন আলাদা করে অনুমোদন করে।
           </div>
         </div>
         <div className="card" style={{ padding: 22 }}>

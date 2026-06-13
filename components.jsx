@@ -24,6 +24,7 @@ function Icon({ name, size = 20, stroke = 1.7, style }) {
     teacher: <g><path d="M3 6l9-3 9 3-9 3-9-3z"/><path d="M7 8v5c0 1.5 2.2 3 5 3s5-1.5 5-3V8"/></g>,
     users: <g><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0112 0M16 5.5a3 3 0 010 5.5M21 20a6 6 0 00-4-5.6"/></g>,
     user: <g><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0114 0"/></g>,
+    phone: <path d="M6.5 3h3l1.5 5-2 1.5a12 12 0 005.5 5.5l1.5-2 5 1.5v3a2 2 0 01-2 2A16 16 0 014.5 5a2 2 0 012-2z"/>,
     play: <g><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor"/></g>,
     playS: <path d="M7 4.5l13 7.5-13 7.5z" fill="currentColor" stroke="none"/>,
     star: <path d="M12 3.2l2.7 5.5 6 .9-4.3 4.2 1 6L12 17l-5.4 2.8 1-6L3.3 9.6l6-.9z" fill="currentColor" stroke="none"/>,

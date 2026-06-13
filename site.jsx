@@ -347,7 +347,7 @@ function BecomeInstructor({ go }) {
         </div>
         <div className="card" style={{ overflow: "hidden", borderRadius: "var(--r-xl)" }}><Slot label="instructor studio" h={340} dark /></div>
       </section>
-      <section className="wrap" style={{ padding: "0 28px 64px" }}>
+      <section className="wrap" style={{ padding: "0 28px 56px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }} className="cat-grid">
           {steps.map(([h, b], i) => (
             <div key={h} className="card" style={{ padding: 22 }}>
@@ -356,6 +356,72 @@ function BecomeInstructor({ go }) {
               <p className="bn" style={{ color: "var(--ink-2)", fontSize: 14, lineHeight: 1.55, marginTop: 6 }}>{b}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* THREE WAYS TO TEACH */}
+      <section style={{ background: "var(--card)", borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
+        <div className="wrap" style={{ padding: "56px 28px" }}>
+          <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 32px" }}>
+            <span className="chip brand">তিনভাবে শেখাতে পারেন</span>
+            <h2 className="display bn" style={{ fontSize: 34, marginTop: 14 }}>আপনার সুবিধামতো বেছে নিন</h2>
+            <p className="bn" style={{ color: "var(--ink-2)", fontSize: 16, lineHeight: 1.6, marginTop: 10 }}>
+              নিজে বানান সর্বোচ্চ আয়ে, আমাদের দিয়ে বানিয়ে নিন, অথবা আপনার আইডিয়া আমাদের কাছে বিক্রি করুন।
+            </p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="cat-grid">
+            {/* Self-produced */}
+            <div className="card" style={{ padding: 26 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: "var(--brand-soft)", color: "var(--brand-d)", display: "grid", placeItems: "center" }}><Icon name="play2" size={24} /></div>
+              <h3 className="display" style={{ fontSize: 20, marginTop: 16 }}>Self-Produced</h3>
+              <div className="bn" style={{ fontSize: 13.5, color: "var(--ink-3)", marginTop: 4 }}>নিজের ক্যামেরায় রেকর্ড ও এডিট</div>
+              <div className="spread" style={{ margin: "16px 0", alignItems: "baseline" }}>
+                <span className="display" style={{ fontSize: 28, color: "var(--brand-d)" }}>৮০%</span>
+                <span className="bn" style={{ fontSize: 13, color: "var(--ink-3)" }}>আপনি রাখবেন · ২০% কমিশন</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                {["নিজের ভিডিও, নিজের নিয়ন্ত্রণ", "কোর্সের দাম নিজে ঠিক করুন", "সর্বোচ্চ আয়ের হার"].map((t) => (
+                  <div key={t} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}><Icon name="check" size={15} style={{ color: "var(--brand)", marginTop: 2, flexShrink: 0 }} /><span className="bn" style={{ fontSize: 13.5 }}>{t}</span></div>
+                ))}
+              </div>
+              <button className="btn btn-ghost" style={{ width: "100%", marginTop: 20 }} onClick={() => go({ view: "instructor", tab: "build" })}>নিজে বানান</button>
+            </div>
+
+            {/* We produce */}
+            <div className="card" style={{ padding: 26, border: "2px solid var(--accent)", position: "relative" }}>
+              <span className="badge" style={{ position: "absolute", top: -11, right: 22, background: "var(--accent)", color: "#fff" }}>সবচেয়ে জনপ্রিয়</span>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: "var(--accent-soft)", color: "var(--accent-d)", display: "grid", placeItems: "center" }}><Icon name="users" size={24} /></div>
+              <h3 className="display" style={{ fontSize: 20, marginTop: 16 }}>We Produce For You</h3>
+              <div className="bn" style={{ fontSize: 13.5, color: "var(--ink-3)", marginTop: 4 }}>ক্যামেরা + এডিটিং সহায়তা</div>
+              <div className="spread" style={{ margin: "16px 0", alignItems: "baseline" }}>
+                <span className="display" style={{ fontSize: 28, color: "var(--accent-d)" }}>৪০–৫০%</span>
+                <span className="bn" style={{ fontSize: 13, color: "var(--ink-3)" }}>আপনি রাখবেন · প্রোডাকশন আমাদের</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                {["শুটিং, এডিটিং, থাম্বনেইল আমরা করি", "শুধু আপনার জ্ঞানটা দিন", "স্টুডিও বা আপনার সুবিধামতো"].map((t) => (
+                  <div key={t} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}><Icon name="check" size={15} style={{ color: "var(--accent-d)", marginTop: 2, flexShrink: 0 }} /><span className="bn" style={{ fontSize: 13.5 }}>{t}</span></div>
+                ))}
+              </div>
+              <button className="btn btn-accent" style={{ width: "100%", marginTop: 20 }} onClick={() => go({ view: "instructor", tab: "managed" })}>সহায়তা চান <Icon name="arrow" size={16} /></button>
+            </div>
+
+            {/* Buy-out */}
+            <div className="card" style={{ padding: 26 }}>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: "var(--ink)", color: "var(--accent)", display: "grid", placeItems: "center" }}><Icon name="money" size={24} /></div>
+              <h3 className="display" style={{ fontSize: 20, marginTop: 16 }}>Sell Your Idea</h3>
+              <div className="bn" style={{ fontSize: 13.5, color: "var(--ink-3)", marginTop: 4 }}>আইডিয়া বিক্রি করুন</div>
+              <div className="spread" style={{ margin: "16px 0", alignItems: "baseline" }}>
+                <span className="display" style={{ fontSize: 28 }}>এককালীন</span>
+                <span className="bn" style={{ fontSize: 13, color: "var(--ink-3)" }}>একবারে পেমেন্ট</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                {["শুধু আইডিয়া পিচ করুন", "পছন্দ হলে পুরো কোর্স কিনে নেব", "কমিশন নয় — একবারেই টাকা"].map((t) => (
+                  <div key={t} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}><Icon name="check" size={15} style={{ color: "var(--ink)", marginTop: 2, flexShrink: 0 }} /><span className="bn" style={{ fontSize: 13.5 }}>{t}</span></div>
+                ))}
+              </div>
+              <button className="btn btn-ghost" style={{ width: "100%", marginTop: 20 }} onClick={() => go({ view: "instructor", tab: "managed" })}>আইডিয়া পিচ করুন</button>
+            </div>
+          </div>
         </div>
       </section>
     </div>

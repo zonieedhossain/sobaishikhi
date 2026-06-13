@@ -50,7 +50,7 @@ function App() {
 
   let body;
   if (route.view === "learner") body = <LearnerDash go={go} />;
-  else if (route.view === "instructor") body = <InstructorDash go={go} />;
+  else if (route.view === "instructor") body = <InstructorDash go={go} initialTab={route.tab} />;
   else if (route.view === "vendor") body = <VendorPanel go={go} />;
   else if (route.view === "expert") body = <ExpertConsole go={go} />;
   else if (route.view === "admin") body = <AdminApp go={go} layout={t.adminLayout} />;

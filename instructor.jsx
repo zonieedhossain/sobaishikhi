@@ -1,11 +1,11 @@
 /* SobaiShikhi — Instructor dashboard */
-function InstructorDash({ go }) {
+function InstructorDash({ go, initialTab }) {
   const D = window.DATA;
   const me = window.byId(D.instructors, "in1");
   const myCourses = D.courses.filter((c) => c.instr === "in1");
-  const [tab, setTab] = React.useState("overview");
+  const [tab, setTab] = React.useState(initialTab || "overview");
 
-  const tabs = [["overview", "Overview", "grid"], ["courses", "My Courses", "play2"], ["build", "New Course", "plus"], ["earnings", "Earnings", "money"]];
+  const tabs = [["overview", "Overview", "grid"], ["courses", "My Courses", "play2"], ["build", "New Course", "plus"], ["managed", "Ways to Create", "users"], ["earnings", "Earnings", "money"]];
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--paper)" }}>
@@ -26,6 +26,7 @@ function InstructorDash({ go }) {
         {tab === "overview" && <InstrOverview me={me} myCourses={myCourses} setTab={setTab} go={go} />}
         {tab === "courses" && <InstrCourses myCourses={myCourses} setTab={setTab} go={go} />}
         {tab === "build" && <CourseBuilder me={me} setTab={setTab} />}
+        {tab === "managed" && <ManagedProduction me={me} setTab={setTab} />}
         {tab === "earnings" && <InstrEarnings me={me} />}
       </div>
     </div>
@@ -251,6 +252,113 @@ function InstrEarnings({ me }) {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+/* ---- WAYS TO CREATE A COURSE (3 models) ---- */
+function ManagedProduction({ me, setTab }) {
+  const [model, setModel] = React.useState("self"); // self | managed | buyout
+  const [submitted, setSubmitted] = React.useState(false);
+  const [topic, setTopic] = React.useState("");
+
+  const MODELS = {
+    self:    { label: "Self-Produced", labelBn: "নিজে বানান", rate: "কমিশন মাত্র ২০%", icon: "play2",
+               desc: "নিজের ক্যামেরায় রেকর্ড ও এডিট করুন। প্ল্যাটফর্ম কমিশন মাত্র ২০% — বাকি ৮০% আপনার। কোর্সের দাম নিজেই ঠিক করুন।" },
+    managed: { label: "We Produce For You", labelBn: "আমরা বানিয়ে দেব", rate: "প্ল্যাটফর্ম ৫০–৬০%", icon: "users",
+               desc: "ক্যামেরা, শুটিং, এডিটিং, থাম্বনেইল — সব আমাদের টিম করবে। প্রোডাকশন খরচ কভার করতে প্ল্যাটফর্ম ৫০–৬০% নেয়।" },
+    buyout:  { label: "Sell Your Idea", labelBn: "আইডিয়া বিক্রি করুন", rate: "এককালীন পেমেন্ট", icon: "money",
+               desc: "শুধু আপনার আইডিয়া পিচ করুন। আমাদের পছন্দ হলে পুরো কোর্স একবারে কিনে নেব — একবারেই টাকা পাবেন।" },
+  };
+
+  if (submitted) {
+    const isBuy = model === "buyout";
+    return (
+      <div className="center" style={{ flexDirection: "column", padding: "70px 0", textAlign: "center", gap: 16 }}>
+        <div style={{ width: 70, height: 70, borderRadius: 999, background: "var(--brand-soft)", color: "var(--brand-d)", display: "grid", placeItems: "center" }}><Icon name="checkC" size={36} /></div>
+        <h2 className="display bn" style={{ fontSize: 26 }}>{isBuy ? "আইডিয়া জমা হয়েছে!" : "অনুরোধ গৃহীত হয়েছে!"}</h2>
+        <p className="bn" style={{ color: "var(--ink-2)", fontSize: 15.5, maxWidth: 480, lineHeight: 1.6 }}>
+          {isBuy
+            ? "আমাদের কনটেন্ট টিম আপনার আইডিয়া যাচাই করবে। আগ্রহী হলে ২–৩ কর্মদিবসের মধ্যে দাম ও শর্ত নিয়ে যোগাযোগ করব।"
+            : "আমাদের প্রোডাকশন টিম ২ কর্মদিবসের মধ্যে আপনার সাথে যোগাযোগ করে শুটিং ও কনটেন্ট প্ল্যান ঠিক করবে। সব দায়িত্ব আমাদের — আপনি শুধু আপনার জ্ঞানটা দেবেন।"}
+        </p>
+        <div className="chip"><Icon name="clock" size={13} /> Status: {isBuy ? "Content team will review your idea" : "Production team will contact you"}</div>
+        <button className="btn btn-ghost" style={{ marginTop: 8 }} onClick={() => setSubmitted(false)}>আরেকটি অনুরোধ</button>
+      </div>
+    );
+  }
+
+  const m = MODELS[model];
+
+  return (
+    <div style={{ maxWidth: 880 }}>
+      <h2 className="display bn" style={{ fontSize: 26 }}>আপনার কোর্স বানানোর ৩টি উপায়</h2>
+      <p className="bn" style={{ color: "var(--ink-2)", fontSize: 15, marginTop: 6, marginBottom: 22, lineHeight: 1.6, maxWidth: 640 }}>
+        নিজে বানাতে পারেন, আমরা বানিয়ে দিতে পারি, অথবা আপনার আইডিয়া আমরা কিনে নিতে পারি — যেটা আপনার জন্য সুবিধাজনক বেছে নিন।
+      </p>
+
+      {/* choose model — 3 cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 22 }} className="cat-grid">
+        {["self", "managed", "buyout"].map((id) => {
+          const d = MODELS[id];
+          const on = model === id;
+          return (
+            <button key={id} onClick={() => setModel(id)} style={{ textAlign: "left", padding: 20, borderRadius: 14, cursor: "pointer",
+              border: "2px solid " + (on ? "var(--accent)" : "var(--line)"), background: on ? "var(--accent-soft)" : "var(--card)" }}>
+              <div className="spread">
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: on ? "var(--accent)" : "var(--paper-2)", color: on ? "#fff" : "var(--ink-3)", display: "grid", placeItems: "center" }}><Icon name={d.icon} size={20} /></div>
+                <span style={{ width: 20, height: 20, borderRadius: 999, border: "2px solid " + (on ? "var(--accent)" : "var(--line)"), background: on ? "var(--accent)" : "transparent", display: "grid", placeItems: "center" }}>{on && <Icon name="check" size={12} style={{ color: "#fff" }} />}</span>
+              </div>
+              <div className="display" style={{ fontSize: 16, marginTop: 12 }}>{d.label}</div>
+              <div className="display bn" style={{ fontSize: 13.5, color: "var(--accent-d)", marginTop: 2 }}>{d.rate}</div>
+              <div className="bn" style={{ fontSize: 12.5, color: "var(--ink-2)", marginTop: 8, lineHeight: 1.5 }}>{d.desc}</div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* contextual panel */}
+      {model === "self" ? (
+        <div className="card" style={{ padding: 24 }}>
+          <h3 className="display bn" style={{ fontSize: 18, marginBottom: 6 }}>নিজে বানান — সর্বোচ্চ আয়</h3>
+          <p className="bn" style={{ fontSize: 14, color: "var(--ink-2)", lineHeight: 1.6, marginBottom: 18 }}>আপনার ক্যামেরায় রেকর্ড করে এডিট করুন আর কোর্স বিল্ডার দিয়ে আপলোড করুন। অ্যাডমিন রিভিউয়ের পর প্রকাশিত হবে।</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 18 }} className="cat-grid">
+            {[["আপনার শেয়ার", "৮০%"], ["প্ল্যাটফর্ম কমিশন", "২০%"], ["কোর্সের দাম", "আপনি ঠিক করুন"]].map(([l, v]) => (
+              <div key={l} style={{ padding: "14px 16px", border: "1px solid var(--line)", borderRadius: 12, background: "var(--paper-2)" }}>
+                <div className="display" style={{ fontSize: 20 }}>{v}</div>
+                <div className="bn" style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 2 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+          <button className="btn btn-accent btn-lg" style={{ width: "100%" }} onClick={() => setTab && setTab("build")}>নিজে কোর্স বানানো শুরু করুন <Icon name="arrow" size={17} /></button>
+        </div>
+      ) : (
+        <div className="card" style={{ padding: 24 }}>
+          <h3 className="display bn" style={{ fontSize: 18, marginBottom: 16 }}>{model === "buyout" ? "আপনার আইডিয়া পিচ করুন" : "প্রোডাকশন সহায়তার অনুরোধ"}</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div className="field"><label>What do you want to teach?</label><input className="input bn" value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="যেমন: মোবাইল সার্ভিসিং, রান্না, ফ্রিল্যান্সিং…" /></div>
+            {model === "managed" ? (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div className="field"><label>What can you provide?</label>
+                  <select className="select bn">{["শুধু আমার জ্ঞান (সব আপনারা করুন)", "কিছু ছবি/নোট দিতে পারব", "কাঁচা ভিডিও আছে, এডিট দরকার"].map((o) => <option key={o}>{o}</option>)}</select>
+                </div>
+                <div className="field"><label>Preferred location</label>
+                  <select className="select bn">{["SobaiShikhi স্টুডিও", "আমার বাসা/অফিস", "অনলাইন রেকর্ডিং"].map((o) => <option key={o}>{o}</option>)}</select>
+                </div>
+              </div>
+            ) : (
+              <div className="field"><label>Describe your idea</label><textarea className="textarea bn" placeholder="কোর্সে কী কী থাকবে, কারা শিখবে, কেন এটি জনপ্রিয় হবে — সংক্ষেপে লিখুন।" /></div>
+            )}
+            <div className="card" style={{ padding: "12px 16px", background: "var(--paper-2)", border: "none", display: "flex", alignItems: "center", gap: 10 }}>
+              <Icon name={m.icon} size={18} style={{ color: "var(--accent-d)" }} />
+              <span className="bn" style={{ fontSize: 13.5 }}>নির্বাচিত মডেল: <strong>{m.labelBn} ({m.rate})</strong></span>
+            </div>
+          </div>
+          <button className="btn btn-accent btn-lg" style={{ width: "100%", marginTop: 18 }} disabled={!topic} onClick={() => setSubmitted(true)}>
+            {model === "buyout" ? "আইডিয়া জমা দিন" : "প্রোডাকশন সহায়তা চান"} <Icon name="arrow" size={17} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
