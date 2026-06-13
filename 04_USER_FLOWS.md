@@ -5,6 +5,7 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ---
 
 ## 1. Learner — discover → learn
+
 1. Land on **Home** → search a skill or pick a category.
 2. **Browse** results → filter by level / sort / price.
 3. Open **Course detail** → watch free preview, read curriculum + reviews, check instructor.
@@ -17,6 +18,7 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ---
 
 ## 2. Instructor — teach → earn
+
 1. Sign up with **"I want to teach"** intent.
 2. **Instructor dashboard** → New Course.
 3. **Course builder** → add sections, lessons, pricing, cover → **Save draft**.
@@ -29,6 +31,7 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ---
 
 ## 3. Repair contributor — share knowledge
+
 1. From **Repair Hub** → "Write a guide" (or Expert Console → My Guides).
 2. **Guide builder** → title, category, problem, symptoms, tools, safety notes, numbered steps, est. cost, difficulty.
 3. **Save draft** → **Submit for review**.
@@ -38,7 +41,8 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ---
 
 ## 4. Buyer — fix a broken device (the ecosystem journey)
-1. Search a problem (e.g. *"laptop overheating"*) → **AI Repair Assistant** responds with:
+
+1. Search a problem (e.g. _"laptop overheating"_) → **AI Repair Assistant** responds with:
    - possible causes + recommended checks
    - **related repair guide**
    - **related course**
@@ -53,6 +57,7 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ---
 
 ## 5. Vendor — sell tools & parts
+
 1. **Vendor panel** → Add Product (image, specs, price, stock, compatibility).
 2. **Submit for review** → admin approves → product **live** in store.
 3. Manage stock, view orders, track sales commission & payouts.
@@ -60,12 +65,14 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ---
 
 ## 6. Expert / Technician — provide services
+
 - **Expert:** set up profile + expertise + pricing & availability → admin verification → take video consultations → earnings.
 - **Technician:** "List your service" application (NID/trade license upload) → **admin verification** → accept service bookings → live tracking → escrow release on completion.
 
 ---
 
 ## 7. Admin — review & control (the trust gate)
+
 1. **Review Center** → unified queue across all content types (courses, guides, products, blogs/vlogs, experts, technicians, forum answers).
 2. Open an item → **inspect content** (lesson-by-lesson), **flag** problem items, write fix notes, or **edit as admin**.
 3. **Approve** → goes live · **Request revision** → notes sent back to creator · **Reject/Take-down**.
@@ -76,6 +83,7 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ---
 
 ## Cross-cutting state transitions
+
 **Content lifecycle (all types):**
 `Draft → Submitted → Under review → (Approved → Published) | (Revision requested → resubmit) | (Rejected)`
 Live content can later be **Paused / Unpublished / Taken down / Banned** by admin.
@@ -86,6 +94,7 @@ Live content can later be **Paused / Unpublished / Taken down / Banned** by admi
 ---
 
 ## Trust touchpoints along every journey
+
 - Verified badges (instructor, expert, technician).
 - Admin-reviewed stamp on all content.
 - Ratings, reviews, success rates, best-answer badges.
