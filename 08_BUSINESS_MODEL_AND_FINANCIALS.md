@@ -19,6 +19,20 @@ The investor-facing closer: how SobaiShikhi makes money, the unit economics, ill
 | Service bookings              | Commission on technician jobs                 | ~12%                         | P4    |
 | Advertising                   | Sponsored products / featured experts         | CPM/flat                     | P5+   |
 
+```mermaid
+graph TD
+    %% Styling
+    classDef main fill:#3b82f6,stroke:#1d4ed8,color:#fff;
+    classDef rev fill:#10b981,stroke:#047857,color:#fff;
+
+    Platform["SobaiShikhi Platform Revenue Streams"]:::main
+
+    Platform -->|"Education (P1+)"| RevCourses["Course Sales (20% Self-Prod, 50-60% Managed) <br> Subscriptions & Paid Certifications"]:::rev
+    Platform -->|"E-Commerce (P3)"| RevMarket["Tools & Spare Parts (10% Commission) <br> Vendor Featured Subscriptions"]:::rev
+    Platform -->|"On-Demand Services (P4)"| RevServices["Video Consultations (15% Commission) <br> Technician Service Bookings (12% Commission)"]:::rev
+    Platform -->|"Ads & Promos (P5+)"| RevAds["Sponsored Products & Vendor/Expert Featured Placements"]:::rev
+```
+
 > The point: **many monetization surfaces on the same acquired user** — a learner becomes a buyer, a consult client, a service customer. LTV compounds across streams.
 
 ### Three ways to create a course (supply-side model)

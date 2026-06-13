@@ -86,6 +86,22 @@ Defines the core entities, their key fields, and how they relate — plus a prag
 
 ## B. Key relationships
 
+```mermaid
+erDiagram
+    USER ||--o| INSTRUCTOR : "has profile"
+    USER ||--o| VENDOR : "owns shop"
+    USER ||--o| TECHNICIAN : "has listing"
+    USER ||--oN ENROLLMENT : "enrolls"
+    USER ||--oN ORDER : "purchases"
+    USER ||--oN REPAIR_GUIDE : "writes"
+
+    INSTRUCTOR ||--oN COURSE : "publishes"
+    COURSE ||--oN ENROLLMENT : "tracked by"
+
+    VENDOR ||--oN PRODUCT : "lists tools & parts"
+    ORDER ||--|| PAYOUT : "disburses earnings"
+```
+
 - **User** 1—N **Course** (as instructor), **RepairGuide**, **Product**, **Post**.
 - **Course** 1—N **Section** 1—N **Lesson**; Course N—N **Learner** via **Enrollment**.
 - **Category** 1—N **Course** / **RepairGuide**.

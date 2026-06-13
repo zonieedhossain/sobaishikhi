@@ -6,6 +6,26 @@ Monthly burn estimate to build and run the MVP, then operate at early scale. **A
 
 ## A. One-time build cost (≈3 months to soft-launch)
 
+```mermaid
+graph TD
+    %% Styling
+    classDef build fill:#dbeafe,stroke:#3b82f6,color:#1e40af;
+    classDef run fill:#d1fae5,stroke:#10b981,color:#065f46;
+    classDef label fill:#f3f4f6,stroke:#9ca3af,color:#1f2937;
+
+    Capital["Total Seed Capital Allocation"] --> Build["One-Time Build Budget <br> (৳21-22 Lakh / ~$18-20k)"]:::build
+    Capital --> Runway["Monthly Operating Burn <br> (৳5.6 Lakh/mo at Launch)"]:::run
+
+    Build --> PSub["People & Engineering (~70%) <br> Tech Lead, BE, FE, QA, DevOps"]:::build
+    Build --> CSeed["Content Seeding (~25%) <br> Video Shoots & Guide Stipends"]:::build
+    Build --> SetupFee["Tooling & Legal (~5%) <br> Gateway setup, ToS, Domains"]:::build
+
+    Runway --> TeamPost["Post-Launch Team (~70%)"]:::run
+    Runway --> ModLabor["Moderation & Review Labor (~10%)"]:::run
+    Runway --> Infra["Cloud & Video Infrastructure (~5%)"]:::run
+    Runway --> Mktg["Growth & Marketing (~15%)"]:::run
+```
+
 Dominated by people. Team from Doc 10 for ~12 weeks.
 
 | Role                         | Monthly (৳)      | 3 months        |

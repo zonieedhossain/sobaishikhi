@@ -8,26 +8,27 @@ Engineering-only view of the **MVP** (Phase 1 + Repair Hub). Goal: ship a trust-
 
 ## 1. Architecture (high level)
 
-```
-                ┌────────────────────────────┐
-   Web (React)  │  SPA: marketplace + 7 panels│
-   mobile-first │  (Browse/Learn/Teach/Admin) │
-                └─────────────┬──────────────┘
-                              │ HTTPS / JSON
-                  ┌───────────▼───────────┐
-                  │      API Gateway       │  auth, rate-limit, RBAC
-                  └───────────┬───────────┘
-        ┌──────────┬──────────┼──────────┬───────────┐
-        ▼          ▼          ▼          ▼           ▼
-   Core API   Media svc   Payment svc  Search    Notification
-   (Go/chi)  (uploads,   (bKash/Nagad)(Meili/  (SMS/email/
-              transcode)   webhooks)    PG FTS)   in-app)
-        │          │          │          │           │
-        └──────────┴────┬─────┴──────────┴───────────┘
-                        ▼
-        PostgreSQL (core)  ·  Redis (cache/session/queue)  ·  S3 (assets)
-                        │
-                  Audit log (every admin/state change)
+```mermaid
+graph TD
+    %% Styling
+    classDef client fill:#dbeafe,stroke:#3b82f6,color:#1e40af,font-weight:bold;
+    classDef gateway fill:#fee2e2,stroke:#ef4444,color:#991b1b;
+    classDef service fill:#d1fae5,stroke:#10b981,color:#065f46;
+    classDef db fill:#f3f4f6,stroke:#9ca3af,color:#1f2937;
+
+    FE["Web (React SPA) <br> mobile-first (Browse/Learn/Teach/Admin)"]:::client -->|HTTPS / JSON| GW["API Gateway <br> (Auth, Rate-limiting, RBAC)"]:::gateway
+
+    GW --> Core["Core API Module <br> (Go / chi)"]:::service
+    GW --> Media["Media Service <br> (Uploads & Transcoding)"]:::service
+    GW --> Payment["Payment Service <br> (bKash/Nagad Webhooks)"]:::service
+
+    Core --> DB[("PostgreSQL <br> (Core Relational DB)")]:::db
+    Core --> Cache[("Redis <br> (Cache & Task Queue)")]:::db
+
+    Media --> S3[("S3 Object Storage <br> (Videos & Images)")]:::db
+    Payment --> DB
+
+    DB --> Audit[("Audit Log <br> (Admin & State Changes)")]:::db
 ```
 
 **Pattern for MVP:** a **modular monolith** — one deployable **Go** Core API binary with clear package boundaries (cmd/internal/modules) + a separate **Go media worker** for transcode jobs. Split into services only when load demands it. Go gives a single static binary, low memory, fast cold starts, and first-class concurrency for media/webhook workloads — cheap and simple to operate.

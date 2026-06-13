@@ -11,6 +11,23 @@ The human side of SobaiShikhi. Before architecture and revenue, this is **who** 
 
 Across Bangladesh, knowledge and capability exist in abundance — but they're **trapped**. A skilled technician can't reach learners. A graduate can't find affordable, practical, Bangla courses. A homemaker with a broken fridge has nowhere trustworthy to turn. SobaiShikhi exists to **connect trapped knowledge with the people who need it** — so anyone can teach, and everyone can learn.
 
+```mermaid
+graph TD
+    %% Styling
+    classDef learner fill:#3b82f6,stroke:#1d4ed8,color:#fff;
+    classDef expert fill:#10b981,stroke:#047857,color:#fff;
+    classDef technician fill:#f59e0b,stroke:#b45309,color:#fff;
+
+    Rahim[Rahim: Aspiring Learner]:::learner -->|Enrolls in| Courses[Bangla Video Courses]
+    Mufti Imran[Mufti Imran: Scholar]:::expert -->|Teaches Verified| Courses
+    Shahida[Shahida: Trapped Expert]:::expert -->|Publishes Managed| Courses
+
+    Karim[Karim: Phone DIYer]:::learner -->|Reads| RepairGuides[Step-by-step Repair Guides]
+    Rakibul[Rakibul: Local Tech]:::technician -->|Authors| RepairGuides
+    Rakibul -->|Offers Paid| VideoCalls[Video Consultations]
+    Karim -->|Hires for Repair| Rakibul
+```
+
 ---
 
 ## Story 1 — Rahim, the learner who can't afford the gatekeepers

@@ -4,6 +4,42 @@ Turns the Project Definition into a concrete, prioritized feature list. Features
 
 ---
 
+```mermaid
+graph TD
+    %% Styling
+    classDef mvp fill:#d1fae5,stroke:#10b981,color:#065f46,font-weight:bold;
+    classDef growth fill:#dbeafe,stroke:#3b82f6,color:#1e40af;
+    classDef scale fill:#fef3c7,stroke:#f59e0b,color:#78350f;
+
+    subgraph P0 ["P0: MVP Core (Launch Phase)"]
+        direction LR
+        c1["Marketplace Browse"]:::mvp
+        c2["Learner Dashboard"]:::mvp
+        c3["Course Builder"]:::mvp
+        c4["Repair Guides (Text)"]:::mvp
+        c5["Admin Console"]:::mvp
+    end
+
+    subgraph P1 ["P1: Marketplace Expansion (Growth Phase)"]
+        direction LR
+        f1["Tools & Parts Store"]:::growth
+        f2["Video Consultation"]:::growth
+        f3["Q&A Forum / Blogs"]:::growth
+    end
+
+    subgraph P2 ["P2: Complete Integration (Scale Phase)"]
+        direction LR
+        s1["Technician Booking"]:::scale
+        s2["AI Diagnostic Help"]:::scale
+        s3["Subscriptions & Ads"]:::scale
+    end
+
+    P0 --> P1
+    P1 --> P2
+```
+
+---
+
 ## Guiding principle
 
 Everything that goes public passes through **admin review** first. Nothing — course, guide, product, blog/vlog, expert, technician, forum answer — goes live until approved. Trust is the product.

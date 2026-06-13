@@ -40,6 +40,25 @@ Courses · Repair guides · Managed-production & buy-out requests · Vendor prod
 
 **Revision notes must be specific** — reference the lesson/step/field and what to change. No vague "improve quality."
 
+```mermaid
+graph TD
+    %% Styling
+    classDef decision fill:#f3f4f6,stroke:#9ca3af,color:#1f2937;
+    classDef approve fill:#d1fae5,stroke:#10b981,color:#065f46,font-weight:bold;
+    classDef revision fill:#fef3c7,stroke:#f59e0b,color:#78350f;
+    classDef reject fill:#fee2e2,stroke:#ef4444,color:#991b1b;
+
+    Sub["Submission Received <br> (Course / Guide / Product)"] --> Check1{"Passes Content Policies? <br> (No copyright, scams, hate speech)"}
+
+    Check1 -->|No| Reject["Reject Submission <br> (Log reason & notify creator)"]:::reject
+    Check1 -->|Yes| Check2{"Meets Quality & Safety? <br> (Intelligible A/V, safety warning present)"}
+
+    Check2 -->|No, but fixable| Revise["Request Revision <br> (Flag items, send inline notes)"]:::revision
+    Check2 -->|Yes| Approve["Approve & Publish <br> (Content live, audit logged)"]:::approve
+
+    Revise -->|Creator Fixes & Resubmits| Sub
+```
+
 ---
 
 ## E. SLAs (turnaround targets)

@@ -6,6 +6,39 @@
 
 A Bangla-first **knowledge, repair, commerce & service ecosystem** for Bangladesh — combining the best of Udemy, iFixit, JustAnswer, Daraz and Fiverr inside one trusted platform.
 
+```mermaid
+graph LR
+    %% Styling
+    classDef redBox fill:#fee2e2,stroke:#ef4444,color:#991b1b;
+    classDef greenBox fill:#d1fae5,stroke:#10b981,color:#065f46;
+    classDef blueBox fill:#dbeafe,stroke:#3b82f6,color:#1e40af;
+
+    subgraph Problems ["The Fragmentation (Pain Points)"]
+        p1["No Bangla Courses"]:::redBox
+        p2["Fake Spare Parts"]:::redBox
+        p3["Repair Shop Scams"]:::redBox
+    end
+
+    subgraph Solution ["SobaiShikhi Platform"]
+        s1["Course Marketplace"]:::greenBox
+        s2["Parts & Tools Store"]:::greenBox
+        s3["Verified Experts & Escrow"]:::greenBox
+    end
+
+    subgraph Revenue ["Monetization Model"]
+        r1["Course Rev Share ~20%"]:::blueBox
+        r2["E-commerce Markup ~10%"]:::blueBox
+        r3["Booking Fee ~12%"]:::blueBox
+    end
+
+    p1 --> s1
+    p2 --> s2
+    p3 --> s3
+    s1 --> r1
+    s2 --> r2
+    s3 --> r3
+```
+
 ---
 
 ## What problem am I solving?

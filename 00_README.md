@@ -18,6 +18,25 @@ Bangladesh's all-in-one Bangla **knowledge, repair, commerce & service ecosystem
 
 > Everything public passes through **admin review** before going live. Bangla content, English UI chrome, local payments (bKash/Nagad/Rocket).
 
+```mermaid
+graph TD
+    %% Styling
+    classDef highlight fill:#10b981,stroke:#047857,color:#fff,font-weight:bold;
+    classDef secondary fill:#3b82f6,stroke:#1d4ed8,color:#fff;
+    classDef neutral fill:#f3f4f6,stroke:#9ca3af,color:#1f2937;
+
+    User([Visitor / User]) -->|Browse & Search| site[Browse: Public Marketplace]:::highlight
+    site -->|Enroll & Learn| learner[Learn: Learner Dash]:::secondary
+    site -->|Create Courses| instructor[Teach: Instructor Panel]:::secondary
+    site -->|Sell Parts / Help| expert[Expert & Vendor Panels]:::secondary
+
+    instructor -->|Submit Content| admin{Admin Review Gate}:::neutral
+    expert -->|Submit Guides & Listings| admin
+
+    admin -->|Approve & Publish| site
+    admin -->|Manage & Audit| learner
+```
+
 ---
 
 ## 📚 Founder document set

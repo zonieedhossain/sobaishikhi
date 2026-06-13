@@ -85,6 +85,22 @@ The exact step-by-step paths each user takes through SobaiShikhi. Every public-f
 ## Cross-cutting state transitions
 
 **Content lifecycle (all types):**
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> UnderReview : Submit
+    UnderReview --> Approved : Admin Approve
+    UnderReview --> RevisionRequested : Admin Flag Items
+    UnderReview --> Rejected : Admin Reject Policy Violation
+
+    Approved --> Published : Live
+    RevisionRequested --> Draft : Edit & Resubmit
+    Published --> Paused : Creator Pause
+    Published --> TakenDown : Admin Take Down
+    Paused --> Published : Resume
+```
+
 `Draft → Submitted → Under review → (Approved → Published) | (Revision requested → resubmit) | (Rejected)`
 Live content can later be **Paused / Unpublished / Taken down / Banned** by admin.
 

@@ -27,6 +27,20 @@ Turns the 10–12 week technical plan (Doc 09) into an executable schedule: team
 - Definition of Ready: ticket has acceptance criteria + design ref. Definition of Done: merged, tested, on staging, AC verified, audit-logged where stateful.
 - **Trunk-based** + short-lived PRs; every PR reviewed by tech lead.
 
+```mermaid
+graph LR
+    %% Styling
+    classDef step fill:#dbeafe,stroke:#3b82f6,color:#1e40af;
+    classDef gate fill:#fee2e2,stroke:#ef4444,color:#991b1b;
+
+    Planning["Sprint Planning <br> (Mon Wk 1)"]:::step --> Daily["Daily Standups <br> (15-min)"]:::step
+    Daily --> Dev["Development & <br> Tech Lead PR Review"]:::step
+    Dev --> QA["QA Testing <br> on Staging Envs"]:::step
+    QA --> Review{"Admin Review Gate <br> Verification"}:::gate
+    Review --> Demo["Demo & Retro <br> (Fri Wk 2)"]:::step
+    Demo --> Planning
+```
+
 ---
 
 ## Sprint 0 — Foundation (Week 1–2)

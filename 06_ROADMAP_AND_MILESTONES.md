@@ -16,6 +16,26 @@ Sequences the P0 / P1 / P2 scope (Step 2) into shippable phases with timelines, 
 | 5     | Community + AI               | 5–6 wks  | Forum, blog/vlogs, AI assistant          |
 | 6     | Scale & monetize             | ongoing  | Subscriptions, ads, growth               |
 
+```mermaid
+gantt
+    title SobaiShikhi Phased Build Timeline (Weeks)
+    dateFormat  X
+    axisFormat Week %e
+
+    section Core MVP
+    Phase 0: Foundation               :active, p0, 0, 3
+    Phase 1: Course Marketplace       : p1, after p0, 8
+    Phase 2: Repair Knowledge Hub     : p2, after p1, 4
+
+    section Commerce & Services
+    Phase 3: Commerce (Tools/Parts)   : p3, after p2, 6
+    Phase 4: Services (Consult/Hire)  : p4, after p3, 7
+
+    section Scale
+    Phase 5: Community & AI Assistant : p5, after p4, 6
+    Phase 6: Monetization Scale       : p6, after p5, 8
+```
+
 ---
 
 ## Phase 0 — Foundation (2–3 weeks)

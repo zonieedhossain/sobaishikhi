@@ -11,6 +11,24 @@ How we verify the MVP works before and after launch. Maps to the flows (Doc 04),
 - **E2E (few, critical):** Playwright on the 3 journeys below + the admin gate.
 - **Manual/exploratory:** Bangla rendering, mobile, low-bandwidth, accessibility.
 
+```mermaid
+graph TD
+    %% Styling
+    classDef unit fill:#d1fae5,stroke:#10b981,color:#065f46,font-weight:bold;
+    classDef integration fill:#dbeafe,stroke:#3b82f6,color:#1e40af;
+    classDef e2e fill:#fef3c7,stroke:#f59e0b,color:#78350f;
+    classDef manual fill:#fee2e2,stroke:#ef4444,color:#991b1b;
+
+    Manual["Peak: Manual / Exploratory <br> (UX, Bangla fonts, slow-3G bandwidth)"]:::manual
+    E2E["Level 3: End-to-End (E2E) <br> (Playwright critical user paths + gate check)"]:::e2e
+    Integration["Level 2: Integration Testing <br> (API routing, Database integrity per module)"]:::integration
+    Unit["Base: Unit Testing (Highest Volume) <br> (RBAC guards, commission formulas, validation checks)"]:::unit
+
+    Manual --> E2E
+    E2E --> Integration
+    Integration --> Unit
+```
+
 ---
 
 ## B. Three critical E2E journeys (must always pass)

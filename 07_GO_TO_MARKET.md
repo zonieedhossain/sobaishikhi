@@ -70,6 +70,19 @@ A marketplace needs supply _and_ demand. Sequence it:
 
 `Repair Hub / free class (SEO+social) → account → free preview → first paid course → dashboard habit (streak) → cross-sell (tools, consult, more courses) → certificate → referral`
 
+```mermaid
+graph TD
+    %% Styling
+    classDef step fill:#f3f4f6,stroke:#9ca3af,color:#1f2937;
+    classDef trigger fill:#10b981,stroke:#047857,color:#fff;
+
+    A["Free Repair Guides & Social Clips (SEO / Near-Zero CAC)"]:::step --> B["Account Signup"]:::step
+    B --> C["First Course Enrollment (Mock Payments)"]:::step
+    C --> D["Dashboard Habit (Streaks / Learning Progress)"]:::step
+    D --> E["E-Commerce / Expert Consulting Attach (Cross-Sell)"]:::step
+    E --> F["Certificates & Referrals (Advocate)"]:::trigger
+```
+
 - **Top:** free guides & clips (awareness, near-zero CAC).
 - **Mid:** previews, ratings, verified badges, discounts (trust → first purchase).
 - **Bottom:** AI assistant routes a _problem_ to learn/buy/consult/hire (monetize intent).
