@@ -6,169 +6,699 @@ The concrete request/response contract so frontend and backend build in parallel
 
 ## Conventions
 
-- **Base:** `/api/v1`
-- **Auth:** `Authorization: Bearer <accessToken>` (JWT, 15-min); refresh via `/auth/refresh` (30-day, rotating).
+- **Base URL:** `/api/v1`
+- **Auth:** `Authorization: Bearer <accessToken>` (JWT, 15-min expiry); refresh via `/auth/refresh` (30-day, rotating token).
 - **Content-Type:** `application/json`; file uploads use presigned S3 PUT (see Media).
-- **Pagination:** cursor — `?limit=20&cursor=<opaque>` → `{ data:[], nextCursor }`.
-- **Filtering/sort:** query params; server validates whitelist.
-- **Idempotency:** mutating POSTs accept `Idempotency-Key` header (required for checkout/webhooks).
-- **Localization:** `Accept-Language: bn|en` (affects messages, not content).
+- **Pagination:** cursor-based — `?limit=20&cursor=<opaque>` $\rightarrow$ `{ "data": [], "nextCursor": "..." }`.
+- **Filtering/Sorting:** Query parameters; server validates against a strict whitelist.
+- **Idempotency:** Mutating POST requests accept an `Idempotency-Key` header (required for checkout and webhooks).
+- **Localization:** `Accept-Language: bn|en` (affects error and system messages, not database content).
 
-### Standard error shape
+### Standard Error Shape
 
 ```json
 {
   "error": {
     "code": "VALIDATION_ERROR",
-    "message": "Human readable",
-    "fields": { "email": "invalid" }
+    "message": "The phone field is required.",
+    "fields": {
+      "phone": "invalid phone number format"
+    }
   }
 }
 ```
 
-**Codes:** `UNAUTHENTICATED` (401) · `FORBIDDEN` (403) · `NOT_FOUND` (404) · `VALIDATION_ERROR` (422) · `CONFLICT` (409) · `RATE_LIMITED` (429) · `PAYMENT_FAILED` (402) · `SERVER_ERROR` (500).
+**Common Error Codes:**
+
+- `UNAUTHENTICATED` (401)
+- `FORBIDDEN` (403)
+- `NOT_FOUND` (404)
+- `VALIDATION_ERROR` (422)
+- `CONFLICT` (409)
+- `RATE_LIMITED` (429)
+- `PAYMENT_FAILED` (402)
+- `SERVER_ERROR` (500)
 
 ---
 
 ## Auth
 
-**POST `/auth/otp/request`**
+### Request OTP
 
-```json
-req:  { "phone": "01712345678" }
-res:  { "requestId": "otp_…", "expiresIn": 120 }      // 200; rate-limited per phone/IP
-```
+- **Endpoint:** `POST /auth/otp/request`
+- **Request:**
+  ```json
+  {
+    "phone": "01712345678"
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "requestId": "otp_request_98374",
+    "expiresIn": 120
+  }
+  ```
 
-**POST `/auth/otp/verify`**
+### Verify OTP
 
-```json
-req:  { "requestId": "otp_…", "code": "123456", "name": "Ria Islam", "intent": "learner|instructor" }
-res:  { "accessToken": "…", "refreshToken": "…", "user": { "id","name","roles":["learner"],"verified":false } }
-```
+- **Endpoint:** `POST /auth/otp/verify`
+- **Request:**
+  ```json
+  {
+    "requestId": "otp_request_98374",
+    "code": "123456",
+    "name": "Ria Islam",
+    "intent": "learner"
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "accessToken": "eyJhbGciOi...",
+    "refreshToken": "rfr_837492...",
+    "user": {
+      "id": "user_7493",
+      "name": "Ria Islam",
+      "roles": ["learner"],
+      "verified": false
+    }
+  }
+  ```
 
-**POST `/auth/refresh`** → `{ accessToken, refreshToken }` (old refresh invalidated).
-**POST `/auth/logout`** → `204`.
+### Token Refresh
+
+- **Endpoint:** `POST /auth/refresh`
+- **Request:** (Uses Cookie or Authorization Bearer refresh token)
+- **Response (200 OK):**
+  ```json
+  {
+    "accessToken": "eyJhbGciOi...",
+    "refreshToken": "rfr_984729..."
+  }
+  ```
+
+### Logout
+
+- **Endpoint:** `POST /auth/logout`
+- **Response:** `204 No Content`
 
 ---
 
-## Catalog (public)
+## Catalog (Public)
 
-**GET `/courses`** — query: `cat, level, q, sort(popular|rating|newest|price), limit, cursor`
+### List Courses
 
-```json
-res: { "data": [ {
-  "id","slug","title","titleBn","cat","instructor": {"id","name","verified"},
-  "price": 149900, "oldPrice": 350000, "rating": 4.8, "ratingsCount": 3420,
-  "students": 12400, "lessons": 142, "bestseller": true, "thumbUrl"
-} ], "nextCursor": null }
-```
+- **Endpoint:** `GET /courses`
+- **Query Params:** `cat`, `level`, `q`, `sort` (`popular` | `rating` | `newest` | `price`), `limit`, `cursor`
+- **Response (200 OK):**
+  ```json
+  {
+    "data": [
+      {
+        "id": "course_102",
+        "slug": "web-dev-bangla",
+        "title": "Complete Web Development in Bangla",
+        "titleBn": "ওয়েব ডেভেলপমেন্ট কমপ্লিট কোর্স",
+        "cat": "web-dev",
+        "instructor": {
+          "id": "instr_204",
+          "name": "Anisul Islam",
+          "verified": true
+        },
+        "price": 149900,
+        "oldPrice": 350000,
+        "rating": 4.8,
+        "ratingsCount": 3420,
+        "students": 12400,
+        "lessons": 142,
+        "bestseller": true,
+        "thumbUrl": "https://cdn.sobaishikhi.com/thumbs/web-dev.jpg"
+      }
+    ],
+    "nextCursor": "eyJjdXJzb3IiOjIwfQ=="
+  }
+  ```
 
-**GET `/courses/:slug`** → full course + `sections:[{id,title,lessons:[{id,title,type,duration,isPreview}]}]` + `instructor` + `reviews` summary. Lesson `videoUrl` is **omitted unless enrolled** (preview lessons return a short signed clip).
+### Course Details
 
-**GET `/categories`** → `[{ id, name, nameBn, icon, hue, courseCount, enabled }]`.
+- **Endpoint:** `GET /courses/:slug`
+- **Response (200 OK):**
+  ```json
+  {
+    "id": "course_102",
+    "slug": "web-dev-bangla",
+    "title": "Complete Web Development in Bangla",
+    "titleBn": "ওয়েব ডেভেলপমেন্ট কমপ্লিট কোর্স",
+    "cat": "web-dev",
+    "price": 149900,
+    "oldPrice": 350000,
+    "instructor": {
+      "id": "instr_204",
+      "name": "Anisul Islam",
+      "verified": true,
+      "bio": "10+ years teaching web technologies."
+    },
+    "sections": [
+      {
+        "id": "sec_1",
+        "title": "Introduction to HTML",
+        "lessons": [
+          {
+            "id": "les_1",
+            "title": "What is HTML?",
+            "type": "video",
+            "duration": 480,
+            "isPreview": true
+          }
+        ]
+      }
+    ],
+    "reviews": {
+      "rating": 4.8,
+      "count": 3420,
+      "recent": [
+        {
+          "username": "karim_dev",
+          "rating": 5,
+          "comment": "খুবই সুন্দরভাবে বোঝানো হয়েছে।"
+        }
+      ]
+    }
+  }
+  ```
+  _(Note: Lesson videoUrl is omitted unless the user is enrolled. Preview lessons return a short signed URL clip)._
+
+### List Categories
+
+- **Endpoint:** `GET /categories`
+- **Response (200 OK):**
+  ```json
+  [
+    {
+      "id": "web-dev",
+      "name": "Web Development",
+      "nameBn": "ওয়েব ডেভেলপমেন্ট",
+      "icon": "code",
+      "hue": 205,
+      "courseCount": 24,
+      "enabled": true
+    }
+  ]
+  ```
 
 ---
 
-## Authoring (instructor; RBAC: instructor)
+## Authoring (Instructors)
 
-**POST `/courses`** (create draft)
+### Create Draft Course
 
-```json
-req: { "title","titleBn","cat","level","price",
-       "productionModel": "self|managed|buyout" }
-res: { "id","status":"draft", ... }
-```
+- **Endpoint:** `POST /courses`
+- **Request:**
+  ```json
+  {
+    "title": "Introduction to Robotics",
+    "titleBn": "রোবোটিক্স পরিচিতি",
+    "cat": "robotics",
+    "level": "beginner",
+    "price": 250000,
+    "productionModel": "self"
+  }
+  ```
+- **Response (201 Created):**
+  ```json
+  {
+    "id": "course_105",
+    "title": "Introduction to Robotics",
+    "status": "draft",
+    "productionModel": "self",
+    "createdAt": "2026-06-13T09:50:00Z"
+  }
+  ```
 
-**PATCH `/courses/:id`** — partial update (owner only). `403 FORBIDDEN` if not owner.
-**PUT `/courses/:id/sections`** — replace curriculum `{ sections:[{title,lessons:[{title,type}]}] }`.
-**POST `/courses/:id/submit`** → `{ status:"under_review", submittedAt }`. Server rejects if model=self and no lessons (`VALIDATION_ERROR`).
-**POST `/production-requests`** (managed or buy-out)
+### Update Course
 
-```json
-req: { "model":"managed|buyout", "topic","canProvide","location","ideaNote" }
-res: { "id","status":"pending_admin", "createdAt" }
-```
+- **Endpoint:** `PATCH /courses/:id`
+- **Request:**
+  ```json
+  {
+    "price": 199900
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "id": "course_105",
+    "price": 199900,
+    "status": "draft"
+  }
+  ```
+
+### Replace Curriculum Sections
+
+- **Endpoint:** `PUT /courses/:id/sections`
+- **Request:**
+  ```json
+  {
+    "sections": [
+      {
+        "title": "Getting Started",
+        "lessons": [
+          {
+            "title": "Introduction Video",
+            "type": "video",
+            "duration": 300
+          }
+        ]
+      }
+    ]
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "message": "Curriculum updated successfully"
+  }
+  ```
+
+### Submit Course for Review
+
+- **Endpoint:** `POST /courses/:id/submit`
+- **Response (200 OK):**
+  ```json
+  {
+    "id": "course_105",
+    "status": "under_review",
+    "submittedAt": "2026-06-13T09:52:00Z"
+  }
+  ```
+  _(Note: Server rejects model="self" with 0 lessons with 422 VALIDATION_ERROR)._
+
+### Request Managed Production / Buy-Out
+
+- **Endpoint:** `POST /production-requests`
+- **Request:**
+  ```json
+  {
+    "model": "managed",
+    "topic": "Micro-soldering & logic board diagnostics",
+    "canProvide": "I will provide logic boards and testing units. I need video production support.",
+    "location": "Dhaka, Bangladesh",
+    "ideaNote": "A comprehensive practical guide on repairing smartphone logic boards."
+  }
+  ```
+- **Response (201 Created):**
+  ```json
+  {
+    "id": "prod_req_8392",
+    "model": "managed",
+    "status": "pending_admin",
+    "createdAt": "2026-06-13T09:53:00Z"
+  }
+  ```
 
 ---
 
-## Enrollment & Learning (RBAC: learner)
+## Enrollment & Learning (Learners)
 
-**POST `/checkout/:courseId`** _(Idempotency-Key required)_
+### Course Checkout
 
-```json
-res: { "orderId","amount":149900,"gatewayRedirectUrl":"https://…" }   // hosted payment page
-```
+- **Endpoint:** `POST /checkout/:courseId`
+- **Headers:** `Idempotency-Key: <unique_uuid>`
+- **Response (200 OK):**
+  ```json
+  {
+    "orderId": "ord_83920",
+    "amount": 149900,
+    "gatewayRedirectUrl": "https://sandbox.sslcommerz.com/gwpayment/..."
+  }
+  ```
 
-**POST `/payments/webhook`** _(gateway → server; verify signature; idempotent by txnId)_ → `200`. On success: create `Enrollment`, split commission, emit notification.
-**GET `/me/learning`** → enrolled courses with `progress, lastLessonId`.
-**POST `/enrollments/:courseId/progress`** `{ lessonId, completed:true }` → updated `progress`.
-**GET `/enrollments/:courseId/certificate`** → `{ url }` (only if `progress=100`).
+### Payment Webhook (Gateway to Server)
+
+- **Endpoint:** `POST /payments/webhook`
+- **Headers:** `Idempotency-Key: <transaction_id>`
+- **Request:**
+  ```json
+  {
+    "transactionId": "txn_839201",
+    "orderId": "ord_83920",
+    "amount": 149900,
+    "status": "VALIDATED",
+    "signature": "ab837f..."
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "status": "success",
+    "message": "Payment verified and enrollment processed."
+  }
+  ```
+
+### Get Enrolled Courses
+
+- **Endpoint:** `GET /me/learning`
+- **Response (200 OK):**
+  ```json
+  [
+    {
+      "courseId": "course_102",
+      "title": "Complete Web Development in Bangla",
+      "progress": 35.5,
+      "lastLessonId": "les_42",
+      "enrolledAt": "2026-06-10T12:00:00Z"
+    }
+  ]
+  ```
+
+### Update Lesson Progress
+
+- **Endpoint:** `POST /enrollments/:courseId/progress`
+- **Request:**
+  ```json
+  {
+    "lessonId": "les_1",
+    "completed": true
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "courseId": "course_102",
+    "progress": 36.2
+  }
+  ```
+
+### Download Certificate
+
+- **Endpoint:** `GET /enrollments/:courseId/certificate`
+- **Response (200 OK):**
+  ```json
+  {
+    "certificateId": "cert_39203",
+    "url": "https://cdn.sobaishikhi.com/certificates/cert_39203.pdf"
+  }
+  ```
+  _(Note: Returns 403 Forbidden if progress < 100%)._
 
 ---
 
 ## Repair Hub
 
-**GET `/guides`** — `rcat, q, difficulty, limit, cursor` → guide cards `{slug,title,difficulty,estCost,estTime,views,successRate}`.
-**GET `/guides/:slug`** → full body `{ overview, symptoms[], causes[], tools[], safety[], steps[], mistakes[], prevention[] }`.
-**POST `/guides`** / **POST `/guides/:id/submit`** — contributor authoring → review queue.
-**POST `/guides/:id/helpful`** `{ helpful:true }` → updates success rate (one per user).
+### List Repair Guides
+
+- **Endpoint:** `GET /guides`
+- **Query Params:** `rcat`, `q`, `difficulty`, `limit`, `cursor`
+- **Response (200 OK):**
+  ```json
+  {
+    "data": [
+      {
+        "id": "guide_84",
+        "slug": "iphone-13-screen-replacement",
+        "title": "iPhone 13 Screen Replacement",
+        "difficulty": "medium",
+        "estCost": 850000,
+        "estTime": "45 mins",
+        "views": 12400,
+        "successRate": 94
+      }
+    ],
+    "nextCursor": "eyJjdXJzb3IiOjEwfQ=="
+  }
+  ```
+
+### Get Repair Guide Details
+
+- **Endpoint:** `GET /guides/:slug`
+- **Response (200 OK):**
+  ```json
+  {
+    "id": "guide_84",
+    "slug": "iphone-13-screen-replacement",
+    "title": "iPhone 13 Screen Replacement",
+    "difficulty": "medium",
+    "estCost": 850000,
+    "estTime": "45 mins",
+    "body": {
+      "overview": "Detailed guide to replacing an iPhone 13 OLED screen.",
+      "symptoms": ["Cracked glass", "Unresponsive touch"],
+      "causes": ["Accidental drop"],
+      "tools": ["Pentalobe screwdriver", "Suction cup", "Spudger"],
+      "safety": ["Wear safety glasses", "Disconnect battery first"],
+      "steps": [
+        {
+          "step": 1,
+          "instruction": "Unscrew the two pentalobe screws at the bottom edge."
+        }
+      ],
+      "mistakes": ["Prying too hard near the camera cables"],
+      "prevention": "Use a screen protector to avoid future cracks."
+    }
+  }
+  ```
+
+### Submit New Repair Guide
+
+- **Endpoint:** `POST /guides`
+- **Request:**
+  ```json
+  {
+    "title": "Laptop Thermal Paste Replacement",
+    "rcat": "laptop",
+    "difficulty": "easy",
+    "estCost": 50000,
+    "estTime": "20 mins",
+    "body": {
+      "overview": "Applying fresh thermal paste to CPU/GPU.",
+      "steps": []
+    }
+  }
+  ```
+- **Response (201 Created):**
+  ```json
+  {
+    "id": "guide_85",
+    "status": "draft"
+  }
+  ```
+
+### Submit Guide for Review
+
+- **Endpoint:** `POST /guides/:id/submit`
+- **Response (200 OK):**
+  ```json
+  {
+    "id": "guide_85",
+    "status": "under_review"
+  }
+  ```
+
+### Mark Guide as Helpful
+
+- **Endpoint:** `POST /guides/:id/helpful`
+- **Request:**
+  ```json
+  {
+    "helpful": true
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "id": "guide_85",
+    "successRate": 95
+  }
+  ```
+  _(Note: Rate-limited to one vote per user per guide)._
 
 ---
 
-## Admin (RBAC: admin) — the control plane
+## Admin (RBAC: Admin)
 
-**GET `/admin/review`** — `type(course|guide|production|…), status, limit, cursor`
+### List Review Tasks
 
-```json
-res: { "data":[ { "id","contentType","contentId","title","submittedBy","submittedAt","status" } ] }
-```
+- **Endpoint:** `GET /admin/review`
+- **Query Params:** `type` (`course` | `guide` | `production`), `status`, `limit`, `cursor`
+- **Response (200 OK):**
+  ```json
+  {
+    "data": [
+      {
+        "id": "task_839",
+        "contentType": "course",
+        "contentId": "course_105",
+        "title": "Introduction to Robotics",
+        "submittedBy": "user_204",
+        "submittedAt": "2026-06-13T09:52:00Z",
+        "status": "under_review"
+      }
+    ],
+    "nextCursor": null
+  }
+  ```
 
-**POST `/admin/review/:id/approve`** → content → `published`; audit-logged.
-**POST `/admin/review/:id/revision`** `{ notes:[{itemRef,note}] }` → content → `revision`; notifies creator.
-**POST `/admin/review/:id/reject`** `{ reason }` → `rejected`.
-**GET `/admin/orders`** — `from,to,type,status` → `[{ id, buyer, itemType, itemId, amount, commission, status, createdAt }]`.
-**GET `/admin/payouts`** / **POST `/admin/payouts/:id/process`** → marks paid; ledger entry.
-**PATCH `/admin/settings`**
+### Approve Content
 
-```json
-req: { "commissionRates": {"courseSelf":20,"courseManaged":55,"store":10,"consultation":15,"service":12},
-       "paymentMethods": {"bkash":true,"nagad":true,"rocket":false,"card":true},
-       "sectionsEnabled": {...}, "homepageBanner": {"on":true,"text":"…","discountPct":60} }
-res: { "ok": true }
-```
+- **Endpoint:** `POST /admin/review/:id/approve`
+- **Response (200 OK):**
+  ```json
+  {
+    "taskId": "task_839",
+    "status": "approved",
+    "contentStatus": "published"
+  }
+  ```
 
-**POST `/admin/users/:id/suspend`** `{ reason }` / **`/ban`** / **`/verify`** → audit-logged.
-**POST `/admin/courses/:id/feature`** | **`/unpublish`**.
+### Request Content Revision
 
-> **Invariant:** the _only_ path to `status:"published"` is an admin approve transition. No instructor/vendor endpoint can set it. Enforced in the service layer + covered by tests.
+- **Endpoint:** `POST /admin/review/:id/revision`
+- **Request:**
+  ```json
+  {
+    "notes": [
+      {
+        "itemRef": "lesson_3_video",
+        "note": "Audio volume is too low. Please re-upload with amplified audio."
+      }
+    ]
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "taskId": "task_839",
+    "status": "revision_requested",
+    "contentStatus": "revision"
+  }
+  ```
+
+### Reject Content
+
+- **Endpoint:** `POST /admin/review/:id/reject`
+- **Request:**
+  ```json
+  {
+    "reason": "Violates content guidelines (copyrighted background music)."
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "taskId": "task_839",
+    "status": "rejected",
+    "contentStatus": "rejected"
+  }
+  ```
+
+### List Orders
+
+- **Endpoint:** `GET /admin/orders`
+- **Query Params:** `from`, `to`, `type`, `status`
+- **Response (200 OK):**
+  ```json
+  [
+    {
+      "id": "ord_83920",
+      "buyerId": "user_7493",
+      "itemType": "course",
+      "itemId": "course_102",
+      "amount": 149900,
+      "commission": 29980,
+      "status": "paid",
+      "createdAt": "2026-06-13T09:47:00Z"
+    }
+  ]
+  ```
+
+### Payout Management
+
+- **Endpoint:** `GET /admin/payouts` → List payout queue.
+- **Endpoint:** `POST /admin/payouts/:id/process` $\rightarrow$ marks paid.
+
+### Update Platform Settings
+
+- **Endpoint:** `PATCH /admin/settings`
+- **Request:**
+  ```json
+  {
+    "commissionRates": {
+      "courseSelf": 20,
+      "courseManaged": 55,
+      "store": 10,
+      "consultation": 15,
+      "service": 12
+    },
+    "paymentMethods": {
+      "bkash": true,
+      "nagad": true,
+      "rocket": false,
+      "card": true
+    },
+    "homepageBanner": {
+      "on": true,
+      "text": "Ramadan Special Offer!",
+      "discountPct": 60
+    }
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "ok": true
+  }
+  ```
+
+### Moderate Users
+
+- **Endpoint:** `POST /admin/users/:id/suspend` `{ "reason": "..." }`
+- **Endpoint:** `POST /admin/users/:id/ban` `{ "reason": "..." }`
+- **Endpoint:** `POST /admin/users/:id/verify` (Toggles verified badge)
+
+### Modify Course Visibility
+
+- **Endpoint:** `POST /admin/courses/:id/feature`
+- **Endpoint:** `POST /admin/courses/:id/unpublish`
 
 ---
 
-## Webhooks & async
+## Media & Uploads
 
-- **Payment webhook** (inbound): signed, idempotent by gateway txnId; retried by gateway — must be safe to replay.
-- **Notifications** (outbound, queued): OTP SMS, review decision, payout status, enrollment receipt.
-- **Transcode jobs**: `POST /media/uploads` → presigned PUT → worker transcodes → `lesson.status: ready`; FE polls or subscribes.
+### Get Presigned Upload URL
+
+- **Endpoint:** `POST /media/uploads`
+- **Request:**
+  ```json
+  {
+    "kind": "video",
+    "contentType": "video/mp4"
+  }
+  ```
+- **Response (200 OK):**
+  ```json
+  {
+    "uploadUrl": "https://s3.amazonaws.com/sobaishikhi-media/raw/...",
+    "assetId": "asset_9843a"
+  }
+  ```
+- **Process Flow:**
+  1. Client sends PUT request with file binary directly to `uploadUrl`.
+  2. Server trigger transcoder worker asynchronously to convert video to HLS.
+  3. Lesson status switches to `ready` upon complete conversion.
 
 ---
 
-## Media
+## Rate Limits (Defaults)
 
-**POST `/media/uploads`** `{ kind:"video|image", contentType }` → `{ uploadUrl (presigned PUT), assetId }`.
-Client PUTs file to `uploadUrl`. Server transcodes (video) → HLS; playback via short-lived signed URL from `GET /lessons/:id/playback` (enrollment-checked).
-
----
-
-## Rate limits (defaults)
-
-- OTP request: 5 / phone / hour. Auth verify: 10 / 10 min.
-- Write endpoints: 60 / min / user. Public reads: 600 / min / IP (CDN-cached).
+- **OTP Request:** 5 requests / phone number / hour.
+- **OTP Verification:** 10 attempts / 10 minutes.
+- **Write Endpoints (POST/PATCH/PUT):** 60 requests / minute / authenticated user.
+- **Public Read Endpoints (GET):** 600 requests / minute / IP (CDN-cached).
 
 ---
 
-## Versioning & compatibility
+## Versioning & Compatibility
 
-- URI-versioned (`/v1`). Additive changes only within a version; breaking changes → `/v2`.
-- Deprecations announced via `Sunset` header. Clients pin a version.
-
-> This contract is the FE/BE handshake for the sprints in Doc 10. Stub these endpoints in Sprint 0–1 so both sides build against the shapes above.
+- URI-versioned (`/v1`). Additive changes only within a version; breaking changes require version bump (e.g., `/v2`).
+- Deprecations announced via `Sunset` header.
