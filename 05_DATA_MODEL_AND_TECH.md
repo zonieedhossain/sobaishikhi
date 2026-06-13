@@ -91,14 +91,14 @@ erDiagram
     USER ||--o| INSTRUCTOR : "has profile"
     USER ||--o| VENDOR : "owns shop"
     USER ||--o| TECHNICIAN : "has listing"
-    USER ||--oN ENROLLMENT : "enrolls"
-    USER ||--oN ORDER : "purchases"
-    USER ||--oN REPAIR_GUIDE : "writes"
+    USER ||--o{ ENROLLMENT : "enrolls"
+    USER ||--o{ ORDER : "purchases"
+    USER ||--o{ REPAIR_GUIDE : "writes"
 
-    INSTRUCTOR ||--oN COURSE : "publishes"
-    COURSE ||--oN ENROLLMENT : "tracked by"
+    INSTRUCTOR ||--o{ COURSE : "publishes"
+    COURSE ||--o{ ENROLLMENT : "tracked by"
 
-    VENDOR ||--oN PRODUCT : "lists tools & parts"
+    VENDOR ||--o{ PRODUCT : "lists tools & parts"
     ORDER ||--|| PAYOUT : "disburses earnings"
 ```
 
