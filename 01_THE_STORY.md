@@ -19,7 +19,7 @@ graph TD
     classDef technician fill:#f59e0b,stroke:#b45309,color:#fff;
 
     Rahim[Rahim: Aspiring Learner]:::learner -->|Enrolls in| Courses[Bangla Video Courses]
-    Mufti Imran[Mufti Imran: Scholar]:::expert -->|Teaches Verified| Courses
+    Imran[Mufti Imran: Scholar]:::expert -->|Teaches Verified| Courses
     Shahida[Shahida: Trapped Expert]:::expert -->|Publishes Managed| Courses
 
     Karim[Karim: Phone DIYer]:::learner -->|Reads| RepairGuides[Step-by-step Repair Guides]
