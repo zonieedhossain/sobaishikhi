@@ -19,21 +19,21 @@ Sequences the P0 / P1 / P2 scope (Step 2) into shippable phases with timelines, 
 ```mermaid
 gantt
     title SobaiShikhi Phased Build Timeline (Weeks)
-    dateFormat  X
-    axisFormat Week %e
+    dateFormat  YYYY-MM-DD
+    axisFormat Week %W
 
     section Core MVP
-    Phase 0: Foundation               :active, p0, 0, 3
-    Phase 1: Course Marketplace       : p1, after p0, 8
-    Phase 2: Repair Knowledge Hub     : p2, after p1, 4
+    Phase 0: Foundation               :active, p0, 2026-01-01, 3w
+    Phase 1: Course Marketplace       : p1, after p0, 8w
+    Phase 2: Repair Knowledge Hub     : p2, after p1, 4w
 
     section Commerce & Services
-    Phase 3: Commerce (Tools/Parts)   : p3, after p2, 6
-    Phase 4: Services (Consult/Hire)  : p4, after p3, 7
+    Phase 3: Commerce (Tools/Parts)   : p3, after p2, 6w
+    Phase 4: Services (Consult/Hire)  : p4, after p3, 7w
 
     section Scale
-    Phase 5: Community & AI Assistant : p5, after p4, 6
-    Phase 6: Monetization Scale       : p6, after p5, 8
+    Phase 5: Community & AI Assistant : p5, after p4, 6w
+    Phase 6: Monetization Scale       : p6, after p5, 8w
 ```
 
 ---
